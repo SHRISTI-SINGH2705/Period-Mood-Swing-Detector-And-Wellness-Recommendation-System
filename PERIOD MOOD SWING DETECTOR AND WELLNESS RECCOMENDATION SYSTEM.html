@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI-Powered MoodSwing Navigator for Women</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(135deg, #f5f0fc, #d6e9f8);
+    margin: 0; padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    color: #333;
+  }
+  .container {
+    max-width: 700px;
+    background: #fff;
+    margin: 40px 20px;
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  }
+  h1 {
+    color: #d649c1;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  p.subtitle {
+    text-align: center;
+    color: #555;
+    font-weight: 500;
+    margin-bottom: 30px;
+  }
+  label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 8px;
+    margin-top: 20px;
+  }
+  select, textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #c3bef0;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  select:focus, textarea:focus {
+    border-color: #9f1d9b;
+  }
+  button {
+    margin-top: 30px;
+    width: 100%;
+    background-color: #6a3fb5;
+    border: none;
+    padding: 15px;
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(106,63,181,0.3);
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #5a35a0;
+  }
+  .result {
+    margin-top: 30px;
+    background: #f2eaff;
+    border-left: 5px solid #6a3fb5;
+    padding: 20px;
+    border-radius: 8px;
+    font-size: 18px;
+    line-height: 1.5;
+    white-space: pre-line;
+  }
+  footer {
+    text-align: center;
+    margin-top: 50px;
+    color: #777;
+    font-size: 14px;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>MoodSwing Navigator for Women</h1>
+    <p class="subtitle">Self-care advice tailored to your mood swings</p>
+    
+    <label for="moodInput">How are you feeling right now?</label>
+    <select id="moodInput" aria-label="Select your current mood">
+      <option value="" disabled selected>Select your mood</option>
+      <option value="anxious">Anxious</option>
+      <option value="irritable">Irritable</option>
+      <option value="sad">Sad</option>
+      <option value="low_energy">Low Energy</option>
+      <option value="overwhelmed">Overwhelmed</option>
+      <option value="happy">Happy</option>
+      <option value="calm">Calm</option>
+      <option value="confused">Confused</option>
+    </select>
+
+    <label for="durationInput">How long have you been feeling this way?</label>
+    <select id="durationInput" aria-label="Select duration of mood">
+      <option value="" disabled selected>Select duration</option>
+      <option value="hours">A few hours</option>
+      <option value="day">About a day</option>
+      <option value="days">Several days</option>
+      <option value="weeks">Weeks</option>
+    </select>
+
+    <label for="notesInput">Any additional notes (optional)</label>
+    <textarea id="notesInput" rows="4" placeholder="Write anything you'd like to share..."></textarea>
+
+    <button id="getAdviceBtn">Get Self-Care Advice</button>
+
+    <div class="result" id="resultArea" aria-live="polite" aria-atomic="true" style="display:none;"></div>
+  </div>
+  <footer>© 2024 MoodSwing Navigator. For informational purposes only.</footer>
+
+  <script>
+    // Embedded dataset of mood advice keyed by mood and duration
+    const adviceData = {
+      anxious: {
+        hours: `Take some deep breaths and try grounding exercises.\nListening to calm music can help soothe anxiety.\nAvoid caffeine and screen time for a while.`,
+        day: `Consider journaling what’s making you anxious.\nTake a short walk outdoors to clear your mind.\nTry mindfulness meditation for 5-10 minutes.`,
+        days: `If anxiety persists, talk to a trusted friend or counselor.\nEnsure you're getting enough sleep and balanced meals.\nLimit stressful inputs and prioritize self-care.`,
+        weeks: `Long-term anxiety might require professional support.\nConsider consulting a therapist or counselor.\nIncorporate gentle exercise, good sleep hygiene, and social connection.`
+      },
+      irritable: {
+        hours: `Take a short break and step away from stressful situations.\nTry a light stretch or breathing exercise.\nStay hydrated and avoid trigger topics if possible.`,
+        day: `Practice patience and try to identify irritability sources.\nEngage in a soothing activity like reading or a hobby.\nAvoid negative media and rest if you're tired.`,
+        days: `Evaluate your lifestyle — sleep, diet, and stress.\nCommunicate kindly and openly about your feelings.\nConsider light physical activity like yoga to ease tension.`,
+        weeks: `Persistent irritability might need medical advice.\nTrack your mood and possible triggers in a journal.\nSeek help from a mental health professional if needed.`
+      },
+      sad: {
+        hours: `Allow yourself to feel your emotions without judgment.\nTry listening to uplifting music or watching comforting shows.\nReach out to a trusted friend for support.`,
+        day: `Engage in activities that normally bring you joy.\nSpend some time outside or in natural light.\nAvoid isolating yourself and maintain social contact.`,
+        days: `Set small goals to get moving and keep active.\nPractice self-compassion and consider creative outlets.\nIf sadness deepens, consider talking to a professional.`,
+        weeks: `Persistent sadness may indicate depression.\nSeek support from a mental health counselor.\nConsider lifestyle changes like exercise, nutrition, and regular sleep.`
+      },
+      low_energy: {
+        hours: `Try light stretching or a short walk to increase circulation.\nStay hydrated and have a nutritious snack.\nAvoid napping too long to keep your rhythm.`,
+        day: `Evaluate your sleep quality and quantity.\nIncorporate gentle exercise and natural light exposure.\nTake time for relaxation but stay moderately active.`,
+        days: `Assess your diet and avoid excessive sugar or caffeine.\nSchedule activities you enjoy to boost motivation.\nIf fatigue persists, consider seeing a healthcare provider.`,
+        weeks: `Chronic low energy may require medical investigation.\nTrack symptoms and habits to share with your doctor.\nEnsure balanced nutrition, hydration, sleep, and stress management.`
+      },
+      overwhelmed: {
+        hours: `Break down tasks into small, manageable steps.\nPractice deep breathing to calm your nervous system.\nReach out for support or delegate where possible.`,
+        day: `Prioritize your responsibilities and eliminate non-essentials.\nUse calming techniques like meditation or gentle yoga.\nMake time for rest and avoid overcommitting.`,
+        days: `Consider talking to a trusted friend or counselor.\nImplement regular breaks and self-care routines.\nPractice setting boundaries and saying no.`,
+        weeks: `Seek professional help if stress feels unmanageable.\nLong-term overwhelm can impact mental and physical health.\nExplore stress management programs or therapy.`
+      },
+      happy: {
+        hours: `Enjoy your positive feelings and share joy with others.\nConsider affirmations or gratitude journaling.\nEngage in creative or playful activities.`,
+        day: `Sustain your happiness with social connection and hobbies.\nKeep a gratitude list to enhance positive outlook.\nConsider helping or volunteering for extra fulfillment.`,
+        days: `Celebrate accomplishments and maintain healthy habits.\nBalance joy with mindfulness to stay grounded.\nTry new experiences to sustain enthusiasm.`,
+        weeks: `Maintain your mood with regular self-care and social support.\nExplore long-term goals aligned with your happiness.\nKeep track of positive experiences and growth.`
+      },
+      calm: {
+        hours: `Savor your sense of calm; continue relaxing activities.\nPractice mindful breathing to deepen calmness.\nConsider a short walk or meditation to maintain peace.`,
+        day: `Use calm moments to reflect and plan gently.\nStay connected with peaceful environments and people.\nBalance calm with light activity and healthy engagement.`,
+        days: `Integrate calming routines like yoga or nature time.\nShare calmness by helping others or mentoring.\nEvaluate what sustains your calm for ongoing wellness.`,
+        weeks: `Aim to maintain balance with mindful living.\nIncorporate physical, mental, and social wellness practices.\nUse calm as a foundation for emotional resilience.`
+      },
+      confused: {
+        hours: `Pause and breathe deeply to clear your mind.\nWrite down your thoughts to organize them.\nAvoid making big decisions until clarity returns.`,
+        day: `Talk through your feelings with a trusted person.\nBreak problems into smaller parts and address step-by-step.\nEngage in relaxing activities to reduce mental noise.`,
+        days: `Seek counseling or coaching for guidance.\nUse mindfulness or grounding techniques regularly.\nTry journaling or creative expression to process confusion.`,
+        weeks: `Persistent confusion may need professional advice.\nRule out physical or mental health factors.\nDevelop routines to support mental clarity.`
+      }
+    };
+
+    const getAdviceBtn = document.getElementById('getAdviceBtn');
+    const resultArea = document.getElementById('resultArea');
+
+    getAdviceBtn.addEventListener('click', () => {
+      const mood = document.getElementById('moodInput').value;
+      const duration = document.getElementById('durationInput').value;
+      const notes = document.getElementById('notesInput').value.trim();
+
+      if (!mood || !duration) {
+        alert('Please select your mood and duration.');
+        return;
+      }
+
+      let adviceMessage = adviceData[mood] && adviceData[mood][duration];
+      if (!adviceMessage) {
+        adviceMessage = 
+          "Sorry, we don't have specific advice for this combination at the moment. Please try again.";
+      }
+
+      let notesSection = notes ? `\n\nAdditional notes you shared:\n${notes}` : '';
+
+      resultArea.style.display = 'block';
+      resultArea.textContent = adviceMessage + notesSection;
+    });
+  </script>
+</body>
+</html>
+
